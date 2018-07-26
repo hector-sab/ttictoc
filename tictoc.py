@@ -2,7 +2,6 @@
 Author: Hector Sanchez
 Date: 2018-07-26
 Description: Class that allows you to do 'tic toc' to your code.
-url: https://github.com/hector-sab/py_tictoc/
 
 This class was based the answers that you can find in the next url.
 https://stackoverflow.com/questions/5849800/tic-toc-functions-analog-in-python
@@ -40,6 +39,7 @@ print(t.elapsed)
 t.toc()
 print(t.elapsed)
 """
+import sys
 import time
 
 class TicToc(object):
@@ -57,10 +57,17 @@ class TicToc(object):
 
         Valid int values:
           0: time.time  |  1: time.perf_counter  |  2: time.proces_time
+          
+          if python version >= 3.7:
+          3: time.time_ns  |  4: time.perf_counter_ns  |  5: time.proces_time_ns
 
         Valid str values:
           'time': time.time  |  'perf_counter': time.perf_counter
           'process_time': time.proces_time
+
+          if python version >= 3.7:
+          'time_ns': time.time_ns  |  'perf_counter_ns': time.perf_counter_ns  
+          'proces_time_ns': time.proces_time_ns
 
         Others:
           Whatever you want to use as time.time
@@ -75,28 +82,68 @@ class TicToc(object):
     if self.indentation:
       self.tstart = []
 
-    if type(method) is int:
-      if method==0: method = 'time'
-      elif method==1: method = 'perf_counter'
-      elif method==2: method = 'process_time'
-      else: 
-        import warnings
-        msg = "Value '{0}' is not a valid option. Using 'time' instead.".format(method)
-        warnings.warn(msg,Warning)
-        method = 'time'
-    
-    if type(method) is str:
-      if method=='time': self.get_time = time.time
-      elif method=='perf_counter': self.get_time = time.perf_counter
-      elif method=='process_time': self.get_time = time.process_time
-      else: 
-        import warnings
-        msg = "Value '{0}' is not a valid option. Using 'time' instead.".format(method)
-        warnings.warn(msg,Warning)
-        self.get_time = time.time
+    self.__measure = 's' # seconds
 
+    self.__vsys = sys.version_info
+
+    if self.__vsys[0]>2 and self.__vsys[1]>=7:
+      # If python version is greater or equal than 3.7
+      if type(method) is int:
+        if method==0: method = 'time'
+        elif method==1: method = 'perf_counter'
+        elif method==2: method = 'process_time'
+        elif method==3: method = 'time_ns'
+        elif method==3: method = 'perf_counter_ns'
+        elif method==4: method = 'process_time_ns'
+        else: 
+          import warnings
+          msg = "Value '{0}' is not a valid option. Using 'time' instead.".format(method)
+          warnings.warn(msg,Warning)
+          method = 'time'
+
+      if type(method) is str:
+        if method=='time': self.get_time = time.time
+        elif method=='perf_counter': self.get_time = time.perf_counter
+        elif method=='process_time': self.get_time = time.process_time
+        elif method=='time_ns': self.get_time = time.time_ns, self.__measure = 'ns' # nanoseconds
+        elif method=='perf_counter_ns': self.get_time = time.perf_counter_ns, self.__measure = 'ns' # nanoseconds
+        elif method=='process_time_ns': self.get_time = time.process_time_ns, self.__measure = 'ns' # nanoseconds
+        else: 
+          import warnings
+          msg = "Value '{0}' is not a valid option. Using 'time' instead.".format(method)
+          warnings.warn(msg,Warning)
+          self.get_time = time.time
+      
+      else:
+        self.get_time = method
     else:
-      self.get_time = method
+      # If python vesion is lower than 3.7
+      if type(method) is int:
+        if method==0: method = 'time'
+        elif method==1: method = 'perf_counter'
+        elif method==2: method = 'process_time'
+        else: 
+          import warnings
+          msg = "Value '{0}' is not a valid option. Using 'time' instead.".format(method)
+          warnings.warn(msg,Warning)
+          method = 'time'
+
+      if type(method) is str:
+        if method=='time': self.get_time = time.time
+        elif method=='perf_counter': self.get_time = time.perf_counter
+        elif method=='process_time': self.get_time = time.process_time
+        else: 
+          import warnings
+          msg = "Value '{0}' is not a valid option. Using 'time' instead.".format(method)
+          warnings.warn(msg,Warning)
+          self.get_time = time.time
+
+      else:
+        self.get_time = method
+
+
+
+
 
   def __enter__(self):
     if self.indentation:
@@ -113,7 +160,8 @@ class TicToc(object):
     
     if self.name!='': name = '[{}] '.format(self.name)
     else: name = self.name
-    print('{0}Elapsed time: {1} (s)'.format(name,self.elapsed))
+
+    print('{0}Elapsed time: {1} ({2})'.format(name,self.elapsed,self.__measure))
 
   def tic(self):
     if self.indentation:
