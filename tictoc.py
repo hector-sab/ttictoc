@@ -2,6 +2,7 @@
 Author: Hector Sanchez
 Date: 2018-07-26
 Description: Class that allows you to do 'tic toc' to your code.
+url: https://github.com/hector-sab/py_tictoc/
 
 This class was based the answers that you can find in the next url.
 https://stackoverflow.com/questions/5849800/tic-toc-functions-analog-in-python
