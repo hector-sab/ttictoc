@@ -1,5 +1,9 @@
 """
-Different tic toc implementations extracted from
+Author: Hector Sanchez
+Date: 2018-07-26
+Description: Class that allows you to do 'tic toc' to your code.
+
+This class was based the answers that you can find in the next url.
 https://stackoverflow.com/questions/5849800/tic-toc-functions-analog-in-python
 
 How to use it:
