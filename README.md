@@ -42,7 +42,7 @@ print(t.elapsed)
 ### With indentation
 If you want to time multiple levels of your code, you can also do it by setting 'indentation' to True.
 ```python
-t = TicToc(,indentation=True)
+t = TicToc(indentation=True)
 t.tic()
 some code1...
 t.tic()
