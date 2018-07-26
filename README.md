@@ -68,6 +68,11 @@ The `method` argument can be either `int`, `str`, or your method choice. If it's
 - `perf_counter` or `1`: time.perf_counter
 - `process_time` or `2`: time.process_time
 
+If python version >= 3.7:
+- `time_ns` or `3`: time.time
+- `perf_counter_ns` or `4`: time.perf_counter
+- `process_time_ns` or `5`: time.process_time
+
 In case you prefere to use other method you just do (using as example `time.clock`:
 ```python
 TicToc(method=time.clock) 
