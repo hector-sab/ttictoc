@@ -38,6 +38,13 @@ some code...
 t.toc()
 print(t.elapsed)
 ```
+or
+```python
+t = TicToc('name')
+t.tic()
+some code...
+print(t.toc())
+```
 
 ### With indentation
 If you want to time multiple levels of your code, you can also do it by setting 'indentation' to True.
@@ -49,12 +56,9 @@ t.tic()
 some code2...
 t.tic()
 some code3...
-t.toc()
-print('time for code 3 ',t.elapsed)
-t.toc()
-print('time for code 2 with code 3 ',t.elapsed)
-t.toc()
-print('time for code 1 with code 2 and 3 ',t.elapsed)
+print('time for code 3 ',t.toc())
+print('time for code 2 with code 3 ',t.toc())
+print('time for code 1 with code 2 and 3 ',t.toc())
 ```
 
 ## Arguments
