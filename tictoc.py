@@ -141,10 +141,6 @@ class TicToc(object):
       else:
         self.get_time = method
 
-
-
-
-
   def __enter__(self):
     if self.indentation:
       self.tstart.append(self.get_time())
