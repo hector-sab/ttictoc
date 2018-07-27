@@ -6,7 +6,7 @@ It allows you to time some parts of your code in an easy way.
 
 First import the class
 ```python
-from tictoc import TicToc
+from ttictoc import TicToc
 ```
 
 Now, they are several ways to use it.
