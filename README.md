@@ -2,6 +2,12 @@
 
 It allows you to time some parts of your code in an easy way.
 
+You can get it from pip.
+```python
+pip install ttictoc
+```
+
+
 # How to use it
 
 First import the class
