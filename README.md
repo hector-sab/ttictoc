@@ -62,9 +62,9 @@ t.tic()
 some code2...
 t.tic()
 some code3...
-print('time for code 3 ',t.toc())
-print('time for code 2 with code 3 ',t.toc())
-print('time for code 1 with code 2 and 3 ',t.toc())
+t.toc() # Prints time for code 3 
+t.toc() # Prints time for code 2 with code 3
+t.toc() # Prints time for code 1 with code 2 and 3
 ```
 
 ## Arguments
