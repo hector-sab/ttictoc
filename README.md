@@ -28,7 +28,7 @@ with TicToc('name'):
 
 Or by creating an object you can do de same.
 ```python
-t = TicToc('name')
+t = TicToc()
 with t:
   some code...
   
@@ -46,7 +46,7 @@ print(t.elapsed)
 ```
 or
 ```python
-t = TicToc('name')
+t = TicToc()
 t.tic()
 some code...
 print(t.toc())
