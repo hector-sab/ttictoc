@@ -5,14 +5,14 @@ with open('README.md','r') as f:
 
 setuptools.setup(
     name='ttictoc',
-    version='0.1.1',
+    version='0.2.0',
     author='Hector Sanchez',
     author_email='hector.direct@gmail.com',
     license='MIT',
     description='Time parts of your code easily.',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/hector-sab/py_tictoc",
+    url="https://github.com/hector-sab/ttictoc",
     keywords='tictoc tic toc time timing',
     packages=['ttictoc'],
     classifiers=(
