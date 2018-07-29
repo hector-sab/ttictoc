@@ -37,6 +37,7 @@ t.toc()
 t.toc()
 print(t.elapsed)
 """
+# TODO: Nested naming?
 import sys
 import time
 import warnings
