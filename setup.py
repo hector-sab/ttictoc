@@ -5,7 +5,7 @@ with open('README.md','r') as f:
 
 setuptools.setup(
     name='ttictoc',
-    version='0.3.0',
+    version='0.3.1',
     author='Hector Sanchez',
     author_email='hector.direct@gmail.com',
     license='MIT',
