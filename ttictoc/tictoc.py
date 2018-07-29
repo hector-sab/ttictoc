@@ -79,48 +79,43 @@ class TicToc(object):
     """
     self.name = name
     self.nested = nested
+    self.tstart = None
     if self.nested:
-      self.tstart = []
-    else:
-      self.tstart = None
+      self.set_nested(True)
 
     self.__print_toc = print_toc
 
     self.__vsys = sys.version_info
 
-    self.__int2strl_py37 = ['time','perf_counter','process_time','time_ns','perf_counter_ns','process_time_ns']
-    self.__str2mtd_py37 = {'time':[time.time,'s'],'perf_counter':[time.perf_counter,'s'],'process_time':[time.process_time,'s'],
-    'time_ns':[time.time_ns,'ns'],'perf_counter_ns':[time.perf_counter_ns,'ns'],'process_time_ns':[time.process_time_ns,'ns']}
-
-    self.__int2strl_py27 = ['time','perf_counter','process_time']
-    self.__str2mtd_py27 = {'time':[time.time,'s'],'perf_counter':[time.perf_counter,'s'],'process_time':[time.process_time,'s']}
     
     if self.__vsys[0]>2 and self.__vsys[1]>=7:
       # If python version is greater or equal than 3.7
-      methods_int2str = self.__int2strl_py37
-      methods_str2fn = self.__str2mtd_py37
+      self.__int2strl = ['time','perf_counter','process_time','time_ns','perf_counter_ns','process_time_ns']
+      self.__str2fn = {'time':[time.time,'s'],'perf_counter':[time.perf_counter,'s'],'process_time':[time.process_time,'s'],
+      'time_ns':[time.time_ns,'ns'],'perf_counter_ns':[time.perf_counter_ns,'ns'],'process_time_ns':[time.process_time_ns,'ns']}
     else:
       # If python vesion is lower than 3.7
-      methods_int2str = self.__int2strl_py27
-      methods_str2fn = self.__str2mtd_py27
+      self.__int2strl = ['time','perf_counter','process_time']
+      self.__str2fn = {'time':[time.time,'s'],'perf_counter':[time.perf_counter,'s'],'process_time':[time.process_time,'s']}
 
     if type(method) is not int or type(method) is not str:
       self.__get_time = method
 
     # Parses from integer to string
-    if type(method) is int and method<len(methods_int2str):
-      method = methods_int2str[method]
-    elif type(method) is int and method>len(methods_int2str):
+    if type(method) is int and method<len(self.__int2strl):
+      method = self.__int2strl[method]
+    elif type(method) is int and method>len(self.__int2strl):
       self.__warning_value(method)
       method = 'time'
 
     # Parses from int to the actual timer
-    if type(method) is str and method in methods_str2fn:
-      self.__get_time = methods_str2fn[method][0]
-      self.__measure = methods_str2fn[method][1]
-    elif type(method) is str and method not in methods_str2fn:
+    if type(method) is str and method in self.__str2fn:
+      self.__get_time = self.__str2fn[method][0]
+      self.__measure = self.__str2fn[method][1]
+    elif type(method) is str and method not in self.__str2fn:
       self.__warning_value(method)
-      self.__get_time = time.time
+      self.__get_time = self.__str2fn['time'][0]
+      self.__measure = self.__str2fn['time'][1]
 
 
   def __warning_value(self,item):
@@ -141,21 +136,29 @@ class TicToc(object):
       self.elapsed = self.tend - self.tstart
     
     if self.__print_toc:
-      if self.name!='': name = '[{}] '.format(self.name)
-      else: name = self.name
+      self.__print_elapsed()
 
-      print('{0}Elapsed time: {1} ({2})'.format(name,self.elapsed,self.__measure))
+  def __print_elapsed(self):
+    """
+    Prints the elapsed time
+    """
+    if self.name!='': name = '[{}] '.format(self.name)
+    else: name = self.name
+    print('{0}Elapsed time: {1} ({2})'.format(name,self.elapsed,self.__measure))
 
-  def tic(self):
+  def tic(self,nested=None):
     """
     Defines the start of the timing.
     """
+    if nested:
+      self.set_nested(True)
+
     if self.nested:
       self.tstart.append(self.__get_time())
     else:
       self.tstart = self.__get_time()
 
-  def toc(self):
+  def toc(self,print_elapsed=None):
     """
     Defines the end of the timing.
     """
@@ -171,11 +174,12 @@ class TicToc(object):
       else:
         self.elapsed = None
 
-    if self.__print_toc:
-      if self.name!='': name = '[{}] '.format(self.name)
-      else: name = self.name
-
-      print('{0}Elapsed time: {1} ({2})'.format(name,self.elapsed,self.__measure))
+    if print_elapsed is None:
+      if self.__print_toc:
+        self.__print_elapsed()
+    else:
+      if print_elapsed:
+        self.__print_elapsed()
 
     return(self.elapsed)
 
@@ -189,3 +193,25 @@ class TicToc(object):
       self.__print_toc = set_print
     else:
       warnings.warn("Parameter 'set_print' not boolean. Ignoring the command.",Warning)
+
+  def set_nested(self,nested):
+    """
+    Sets the nested functionality.
+    """
+    # Assert that the input is a boolean
+    if type(nested) is bool:
+      # Check if the request is actually changing the 
+      # behaviour of the nested tictoc
+      if nested!= self.nested:
+        self.nested = nested
+
+        if self.nested:
+          self.tstart = []
+        else:
+          self.tstart = None
+    else:
+      warnings.warn("Parameter 'nested' not boolean. Ignoring the command.",Warning)
+
+__TICTOC_asdfghh123456789 = TicToc()
+tic = __TICTOC_asdfghh123456789.tic
+toc = __TICTOC_asdfghh123456789.toc
