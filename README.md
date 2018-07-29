@@ -109,7 +109,7 @@ toc() # Prints the time that took some code 1 and 2 to run
 It's the same.
 
 ## Available methods
-- `set_print_toc`: Sets the global behaviour of toc about printing the elapsed time. However if you use toc(print_elapsed=True), for that specific toc the elapsed time will be printed even if `set_print_toc` was put to False. 
+- `set_print_toc`: Sets the global behaviour of toc about printing the elapsed time. However, if you use toc(print_elapsed=True), for that specific toc the elapsed time will be printed even if `set_print_toc` was put to `False`. 
 - `set_nested`: Indicates if tic toc should allow nesting.
 
 ```python
@@ -120,10 +120,10 @@ t.set_print_toc(False)
 ```
 
 ## Arguments
-The class has 4 arguments: `name`,`method`,`indentation`, and `print_toc`. 
+The class has 4 arguments: `name`,`method`,`nested`, and `print_toc`. 
 - `name`:  It's the name of the object. It's not required.
 - `method`: Indicates which method should be used to get the time.
-- `indentation`: Allows to use the same object several times, in different indentations to time.
+- `nested`: Allows to use the same object several times, in different indentations to time.
 - `print_toc`:  Indicate if you want to print, or not, the elapsed time when calling toc.
 
 The `method` argument can be either `int`, `str`, or your method choice. If it's a string, the valid values are `time`, `perf_counter`, and `process_time`. If it's an integer, the valid values are `0`, `1`, and `2`. 
