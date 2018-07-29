@@ -105,7 +105,7 @@ class TicToc(object):
       methods_str2fn = self.__str2mtd_py27
 
     if type(method) is not int or type(method) is not str:
-      self.get_time = method
+      self.__get_time = method
 
     # Parses from integer to string
     if type(method) is int and method<len(methods_int2str):
@@ -116,11 +116,11 @@ class TicToc(object):
 
     # Parses from int to the actual timer
     if type(method) is str and method in methods_str2fn:
-      self.get_time = methods_str2fn[method][0]
+      self.__get_time = methods_str2fn[method][0]
       self.__measure = methods_str2fn[method][1]
     elif type(method) is str and method not in methods_str2fn:
       self.__warning_value(method)
-      self.get_time = time.time
+      self.__get_time = time.time
 
 
   def __warning_value(self,item):
@@ -129,12 +129,12 @@ class TicToc(object):
 
   def __enter__(self):
     if self.nested:
-      self.tstart.append(self.get_time())
+      self.tstart.append(self.__get_time())
     else:
-      self.tstart = self.get_time()
+      self.tstart = self.__get_time()
 
   def __exit__(self,type,value,traceback):
-    self.tend = self.get_time()
+    self.tend = self.__get_time()
     if self.nested:
       self.elapsed = self.tend - self.tstart.pop()
     else:
@@ -151,15 +151,15 @@ class TicToc(object):
     Defines the start of the timing.
     """
     if self.nested:
-      self.tstart.append(self.get_time())
+      self.tstart.append(self.__get_time())
     else:
-      self.tstart = self.get_time()
+      self.tstart = self.__get_time()
 
   def toc(self):
     """
     Defines the end of the timing.
     """
-    self.tend = self.get_time()
+    self.tend = self.__get_time()
     if self.nested:
       if len(self.tstart)>0:
         self.elapsed = self.tend - self.tstart.pop() 
