@@ -41,7 +41,7 @@ You can also call the tic toc explicitply as shown bellow.
 t = TicToc('name')
 t.tic()
 some code...
-t.toc()
+t.toc() # Prints and returns the elapsed time
 print(t.elapsed)
 ```
 or
@@ -49,7 +49,7 @@ or
 t = TicToc()
 t.tic()
 some code...
-print(t.toc())
+t.toc() # Prints and returns the elapsed time
 ```
 
 ### With indentation
@@ -62,9 +62,9 @@ t.tic()
 some code2...
 t.tic()
 some code3...
-print(t.toc()) # Prints time for code 3 
-print(t.toc()) # Prints time for code 2 with code 3
-print(t.toc()) # Prints time for code 1 with code 2 and 3
+t.toc() # Prints time for code 3 
+t.toc() # Prints time for code 2 with code 3
+t.toc() # Prints time for code 1 with code 2 and 3
 ```
 
 ## Arguments
