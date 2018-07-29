@@ -99,7 +99,7 @@ class TicToc(object):
       self._int2strl = ['time','perf_counter','process_time']
       self._str2fn = {'time':[time.time,'s'],'perf_counter':[time.perf_counter,'s'],'process_time':[time.process_time,'s']}
 
-    if type(method) is not int or type(method) is not str:
+    if type(method) is not int and type(method) is not str:
       self._get_time = method
 
     # Parses from integer to string
