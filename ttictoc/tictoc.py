@@ -46,7 +46,7 @@ class TicToc(object):
   """
   Counts the elapsed time.
   """
-  def __init__(self,name='',method='time',nested=False,print_toc=True):
+  def __init__(self,name='',method='time',nested=False,print_toc=False):
     """
     Args:
     name (str): Just informative, not needed
