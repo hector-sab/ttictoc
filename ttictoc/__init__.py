@@ -1,3 +1,3 @@
-from .tictoc import TicToc
+from .tictoc import TicToc,tic,toc
 
-__version__ = '0.3.2'
+__version__ = '0.3.3'
