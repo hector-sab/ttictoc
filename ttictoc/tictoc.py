@@ -140,8 +140,7 @@ class TicToc(object):
     else:
       self.elapsed = self.tend - self.tstart
     
-    if self._print_toc:
-      self._print_elapsed()
+    self._print_elapsed()
 
   def _print_elapsed(self):
     """
