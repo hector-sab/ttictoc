@@ -126,8 +126,12 @@ The class has 4 arguments: `name`,`method`,`nested`, and `print_toc`.
 - `nested`: Allows to use the same object several times, in different indentations to time.
 - `print_toc`:  Indicate if you want to print, or not, the elapsed time when calling toc.
 
-The `method` argument can be either `int`, `str`, or your method choice. If it's a string, the valid values are `time`, `perf_counter`, and `process_time`. If it's an integer, the valid values are `0`, `1`, and `2`. 
+The `method` argument can be either `int`, `str`, or your method choice. If it's a string, the valid values are `time`, `perf_counter`, and `process_time`. If it's an integer, the valid values are `0`, `1`, and `2`.
+
 - `time` or `0`: time.time
+
+If python > 2
+
 - `perf_counter` or `1`: time.perf_counter
 - `process_time` or `2`: time.process_time
 

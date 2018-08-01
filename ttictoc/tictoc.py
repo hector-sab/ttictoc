@@ -94,10 +94,14 @@ class TicToc(object):
       self._int2strl = ['time','perf_counter','process_time','time_ns','perf_counter_ns','process_time_ns']
       self._str2fn = {'time':[time.time,'s'],'perf_counter':[time.perf_counter,'s'],'process_time':[time.process_time,'s'],
       'time_ns':[time.time_ns,'ns'],'perf_counter_ns':[time.perf_counter_ns,'ns'],'process_time_ns':[time.process_time_ns,'ns']}
-    else:
-      # If python vesion is lower than 3.7
+    elif self._vsys[0]>2:
+      # If python vesion greater than 3
       self._int2strl = ['time','perf_counter','process_time']
       self._str2fn = {'time':[time.time,'s'],'perf_counter':[time.perf_counter,'s'],'process_time':[time.process_time,'s']}
+    else:
+      # If python version is 2.#
+      self._int2strl = ['time']
+      self._str2fn = {'time':[time.time,'s']}
 
     if type(method) is not int and type(method) is not str:
       self._get_time = method
