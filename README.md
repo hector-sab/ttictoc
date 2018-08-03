@@ -39,15 +39,15 @@ You can also call the tic toc explicitply as shown bellow.
 t = TicToc('name')
 t.tic()
 some code...
-t.toc() # Prints and returns the elapsed time
-print(t.elapsed)
+t.toc()
+print(t.elapsed) # Prints and returns the elapsed time
 ```
 or
 ```python
 t = TicToc()
 t.tic()
 some code...
-t.toc() # Prints and returns the elapsed time
+print(t.toc()) # Prints and returns the elapsed time
 ```
 
 ### With nesting
@@ -60,9 +60,9 @@ t.tic()
 some code2...
 t.tic()
 some code3...
-t.toc() # Prints time for code 3 
-t.toc() # Prints time for code 2 with code 3
-t.toc() # Prints time for code 1 with code 2 and 3
+print(t.toc()) # Prints time for code 3 
+print(t.toc()) # Prints time for code 2 with code 3
+print(t.toc()) # Prints time for code 1 with code 2 and 3
 ```
 
 ### Not feeling like writing 't.'?
@@ -94,8 +94,8 @@ tic(nested=True)
 some code1...
 tic(nested=True)
 some code2...
-toc() # Prints the time that took some code 2 to run
-toc() # Prints the time that took some code 1 and 2 to run
+print(toc()) # Prints the time that took some code 2 to run
+print(toc()) # Prints the time that took some code 1 and 2 to run
 ```
 or
 ```python
@@ -103,8 +103,8 @@ tic(nested=True)
 some code1...
 tic()
 some code2...
-toc() # Prints the time that took some code 2 to run
-toc() # Prints the time that took some code 1 and 2 to run
+print(toc()) # Prints the time that took some code 2 to run
+print(toc()) # Prints the time that took some code 1 and 2 to run
 ```
 It's the same.
 
