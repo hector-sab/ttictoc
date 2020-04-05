@@ -98,60 +98,74 @@ def select_default_timing_method():
 
 class Timer:
   """Keep track of elapsed time"""
-  def __init__(self,func_time=None,**kwargs):
+  def __init__(self,func_time=None,matlab_like=True,**kwargs):
     """
     - func_time (): Function used to time. For example `time.time`,
         `time.clock`, or `time.perf_counter_ns`.
+    -matlab_like (bool): Nested loops work like in matlab.
     
     Extra args for context manager mode
     - verbose (bool): Print the elapsed time with a default msg
     - verbose_msg (str): Message printed as verbose. It should contain one
         `{}` to insert the elapsed time.
     """
+    self.matlab_like = matlab_like
     self.kwargs = kwargs
     # General starting time
     self._start_time = None
     # Select method of choise for the timer
-    if not func_time:
-      self._get_time = select_default_timing_method()
-    else:
+    self._get_time = select_default_timing_method()
+    if func_time:
       self._get_time = func_time
     # Allow to save multiple timers
     self._timers_start = dict()
     self.elapsed = dict()
+    if matlab_like:
+      self._timers_start = []
+      self.elapsed = None
 
   def start(self,key=None):
     """
     - key ()
     """
-    if not key:
-      self._start_time = self._get_time()
+    if self.matlab_like:
+      self._timers_start.append(self._get_time())
     else:
-      self._timers_start[key] = self._get_time()
+      if not key:
+        self._start_time = self._get_time()
+      else:
+        self._timers_start[key] = self._get_time()
 
   def stop(self,key=None):
     # Get stopping time
     _stop_time = self._get_time()
     
-    # Handle initialization errors first
-    if (not key and not self._start_time or
-      key and not key in self._timers_start.keys()):
-      raise TimerError(f"Timer is not running. Use .start() to start it")
-    
-    # Select correct starting time
-    _start_time = self._start_time
-    if key: _start_time = self._timers_start[key]
-    
-    # Calculate elapsed time
-    _elap_time = _stop_time - _start_time
-    if key: self.elapsed[key] = _elap_time
+    if self.matlab_like:
+      if len(self._timers_start)==0:
+        _elap_time = None
+      else:
+        _elap_time = _stop_time - self._timers_start.pop()
+    else:
+      # Handle initialization errors first
+      if (not key and not self._start_time or
+        key and not key in self._timers_start.keys()):
+        raise TimerError(f"Timer is not running. Use .start() to start it")
+      
+      # Select correct starting time
+      _start_time = self._start_time
+      if key: _start_time = self._timers_start[key]
+      
+      # Calculate elapsed time
+      _elap_time = _stop_time - _start_time
+      if key: self.elapsed[key] = _elap_time
 
     return _elap_time
 
   def clear_timers(self):
     """Cleaer all start times if any"""
-    self._timers_start = dict()
-    self.timers_elapsed = dict()
+    if not self.matlab_like:
+      self._timers_start = dict()
+      self.timers_elapsed = dict()
 
   def __enter__(self):
     self.elapsed = None
@@ -179,14 +193,14 @@ class Timer:
 
 
 # For tic toc
-__TICTOC_HELPER_CLASS_asdfgqwerzxcv1234 = Timer()
+__TICTOC_HELPER_CLASS_asdfgqwerzxcv1234 = Timer(matlab_like=True)
 tic = __TICTOC_HELPER_CLASS_asdfgqwerzxcv1234.start
 toc = __TICTOC_HELPER_CLASS_asdfgqwerzxcv1234.stop
 
 
 if __name__=='__main__':    # Get stopping time
   import time
-  t = Timer()
+  t = Timer(matlab_like=False)
   # Test Raise TimeError if stoped without start
   # Test Raise TimeError if double start
   # Test returned value of stop
@@ -220,3 +234,13 @@ if __name__=='__main__':    # Get stopping time
   time.sleep(2)
   elapsed = toc()
   print('Elapsed time:',elapsed)
+
+  print('Nested Tic Toc')
+  tic()
+  for i in range(2):
+    tic()
+    time.sleep(1)
+    elapsed = toc()
+    print('[IN] Elapsed:',elapsed)
+  elapsed = toc()
+  print('[OUT] Elapsed:',elapsed)

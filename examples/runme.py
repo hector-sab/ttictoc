@@ -1,60 +1,86 @@
 import time
-from ttictoc import tic,toc
-tic() # Start timing
+from ttictoc import tic,toc,Timer
+
+print('>>> Tic Toc')
+print('\nSimple Tic Toc')
+tic()
 time.sleep(1)
-tic() # Reset the starting time
-time.sleep(1)
-print(toc()) # Prints ~1 seconds
-time.sleep(1)
-print(toc()) # Prints ~2 seconds
+elapsed = toc()
+print('Elapsed time:',elapsed)
+
+print('\nNested Tic Toc')
+tic()
+for i in range(2):
+  tic()
+  time.sleep(1)
+  elapsed = toc()
+  print('[IN LOOP] Elapsed time:',elapsed)
+print('[OUT LOOP] Elapsed time:',toc())
 
 
 
 
-
-
-import time
-from ttictoc import Timer
-
-# General timer
+print('\n>>>Using Timer class')
+print('\nSimple')
 t = Timer()
-t.start() # Starts the general timer
+t.start()
 time.sleep(1)
 elapsed = t.stop()
 print('Elapsed time:',elapsed)
 
-# Multiple timers
-t.start('t0')
+print('\nNested')
+t.start()
 for i in range(2):
-  tname = 't'+str(i+1)
-  t.start(tname)
+  t.start()
   time.sleep(1)
-  elapsed = t.stop(tname)
-  print('[INSIDE LOOP][{}] Elapsed time: {}'.format(tname,elapsed))
-t.stop('t0')
-
-print('[OUTSIDE LOOP][{}] Elapsed time: {}'.format('t0',t.elapsed['t0']))
-print('[OUTSIDE LOOP][{}] Elapsed time: {}'.format('t1',t.elapsed['t1']))
-print('[OUTSIDE LOOP][{}] Elapsed time: {}'.format('t2',t.elapsed['t2']))
+  elapsed = t.stop()
+  print('[IN LOOP] Elapsed time:',elapsed)
+print('[OUT LOOP] Elapsed time:',t.stop())
 
 
 
 
 
 
+print('\n>>>Using Timer class, v2')
+print('\nSimple')
+t = Timer(matlab_like=False)
+t.start()
+time.sleep(1)
+t.start() # Restarts the starting point
+time.sleep(1)
+elapsed = t.stop()
+print('Elapsed time:',elapsed) # ~1 second
 
-import time
-from ttictoc import Timer
+print('\nNested')
+t.start(key='Init')
+for i in range(2):
+  t.start(key=i)
+  time.sleep(1)
+  elapsed = t.stop(key=i)
+  print('[IN LOOP] Elapsed time:',elapsed)
+print('[OUT LOOP] Elapsed time:',t.stop('Init'))
 
+
+print('\n[OUT LOOP][Init] Elapsed time:',t.stop('Init'))
+print('[OUT LOOP][0] Elapsed time:',t.stop(0))
+print('[OUT LOOP][1] Elapsed time:',t.stop(1))
+t.clear_timers() # Delete all the timers, only works in not matlab-like mode
+
+
+print('\n>>>Context Manager')
 # Default
+print('\nDefault')
 with Timer():
   time.sleep(1)
 
 # With out verbose
+print('\nVerbose OFF')
 with Timer(verbose=False) as T:
   time.sleep(1)
 print('Elapsed time:',T.elapsed)
 
 # With default verbose message
+print('\nCustom Verbose')
 with Timer(verbose_msg=f'[User msg][{time.time()}] Elapsed time: {{}}'):
   time.sleep(1)
