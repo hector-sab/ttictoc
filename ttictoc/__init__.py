@@ -1,3 +1,9 @@
-from .tictoc import TicToc,tic,toc
+from .tictoc import Timer,tic,toc
 
-__version__ = '0.4.1'
+def __get_version():
+  import json
+  with open('ttictoc/version.json') as f:
+    version = json.load(f)['version']
+  return version
+
+__version__ = __get_version()

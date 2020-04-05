@@ -1,232 +1,222 @@
 """
-Author: Hector Sanchez
-Date: 2018-07-26
-Description: Class that allows you to do 'tic toc' to your code.
+Time execution 
 
-This class was based the answers that you can find in the next url.
-https://stackoverflow.com/questions/5849800/tic-toc-functions-analog-in-python
+# How to use it:
 
-How to use it:
+## TicToc
+The easiest way included here is using tic and toc
+```
+from ttictoc import tic,toc
+tic() # Start timing
+# some code
+elapsed = toc() # Gets the elapsed time until this moment
+print('Elapsed time:',elapsed)
+```
 
-with TicToc('name'):
-  some code....
-
-or
-
-t = TicToc('name')
-t.tic()
-some code...
-t.toc()
-print(t.elapsed)
-
-or 
-
-t = TicToc('name',time.clock) # or any other method. 
-                             # time.clock seems to be deprecated
-with t:
-  some code....
-
-or
-
-t = TicToc(nested=True)
-t.tic()
-t.tic()
-t.tic()
-t.toc()
-t.toc()
-t.toc()
-print(t.elapsed)
-"""
-# TODO: Nested naming?
-import sys
+You can execute multiple tocs and will be linked to the `tic` time.
+Also, each time `tic` is executed the time holded by `tic` will be
+updated.
+```
 import time
-import warnings
+from ttictoc import tic,toc
+tic() # Start timing
+time.sleep(1)
+tic() # Reset the starting time
+time.sleep(1)
+print(toc()) # Prints ~1 seconds
+time.sleep(1)
+print(toc()) # Prints ~2 seconds
+```
 
-class TicToc(object):
+## Timer Class
+The Timer class can be used to have a single and multiple timers.
+Examples seen with tic,toc are also valid with Timer start,stop
+```
+import time
+from ttictoc import Timer
+
+# General timer
+t = Timer()
+t.start() # Starts the general timer
+time.sleep(1)
+elapsed = t.stop()
+print('Elapsed time:',elapsed)
+
+# Multiple timers
+t.start('t0')
+for i in range(2):
+  tname = 't'+str(i+1)
+  t.start(tname)
+  time.sleep(1)
+  elapsed = t.stop(tname)
+  print('[INSIDE LOOP][{}] Elapsed time: {}'.format(tname,elapsed))
+t.stop('t0')
+
+print('[OUTSIDE LOOP][{}] Elapsed time: {}'.format('t0',t.elapsed['t0']))
+print('[OUTSIDE LOOP][{}] Elapsed time: {}'.format('t1',t.elapsed['t1']))
+print('[OUTSIDE LOOP][{}] Elapsed time: {}'.format('t2',t.elapsed['t2']))
+```
+
+## Context manager
+You can also use it as context manager
+```
+import time
+from ttictoc import Timer
+
+# Default
+with Timer():
+  time.sleep(1)
+
+# With out verbose
+with Timer(verbose=False) as T:
+  time.sleep(1)
+print('Elapsed time:',T.elapsed)
+
+# With default verbose message
+with Timer(verbose_msg=f'[User msg][{time.time()}] Elapsed time: {{}}'):
+  time.sleep(1)
+```
+"""
+import timeit
+
+class TimerError(Exception):
+  """A custom exception used to report errors in use of Timer class"""
+
+def select_default_timing_method():
   """
-  Counts the elapsed time.
+  Recomended timer from python 3.3 onwards is
+  `time.perf_counter` and it seems like timeit
+  automatically selects it depending on your python
+  version. 
   """
-  def __init__(self,name='',method='time',nested=False,print_toc=False):
+  #import sys
+  # For python version 3.7+
+  #v_major = sys.version_info[0]
+  #v_minor = sys.version_info[1]
+  
+  return timeit.default_timer
+
+class Timer:
+  """Keep track of elapsed time"""
+  def __init__(self,func_time=None,**kwargs):
     """
-    Args:
-    name (str): Just informative, not needed
-    method (int|str|ftn|clss): Still trying to understand the default
-        options. 'time' uses the 'real wold' clock, while the other
-        two use the cpu clock. If you want to use your own method, do it
-        through this argument
-
-        Valid int values:
-          0: time.time  |  1: time.perf_counter  |  2: time.proces_time
-          
-          if python version >= 3.7:
-          3: time.time_ns  |  4: time.perf_counter_ns  |  5: time.proces_time_ns
-
-        Valid str values:
-          'time': time.time  |  'perf_counter': time.perf_counter
-          'process_time': time.proces_time
-
-          if python version >= 3.7:
-          'time_ns': time.time_ns  |  'perf_counter_ns': time.perf_counter_ns  
-          'proces_time_ns': time.proces_time_ns
-
-        Others:
-          Whatever you want to use as time.time
-    nested (bool): Allows to do tic toc with nested with a single object.
-        If True, you can put several tics using the same object, and each toc will 
-        correspond to the respective tic.
-        If False, it will only register one single tic, and return the respective 
-        elapsed time of the future tocs.
-    print_toc (bool): Indicates if the toc method will print the elapsed time or not.
-    """
-    self.name = name
-    self.nested = nested
-    self.tstart = None
-    if self.nested:
-      self.set_nested(True)
-
-    self._print_toc = print_toc
-
-    self._vsys = sys.version_info
-
+    - func_time (): Function used to time. For example `time.time`,
+        `time.clock`, or `time.perf_counter_ns`.
     
-    if self._vsys[0]>2 and self._vsys[1]>=7:
-      # If python version is greater or equal than 3.7
-      self._int2strl = ['time','perf_counter','process_time','time_ns','perf_counter_ns','process_time_ns']
-      self._str2fn = {'time':[time.time,'s'],'perf_counter':[time.perf_counter,'s'],'process_time':[time.process_time,'s'],
-      'time_ns':[time.time_ns,'ns'],'perf_counter_ns':[time.perf_counter_ns,'ns'],'process_time_ns':[time.process_time_ns,'ns']}
-    elif self._vsys[0]>2:
-      # If python vesion greater than 3
-      self._int2strl = ['time','perf_counter','process_time']
-      self._str2fn = {'time':[time.time,'s'],'perf_counter':[time.perf_counter,'s'],'process_time':[time.process_time,'s']}
+    Extra args for context manager mode
+    - verbose (bool): Print the elapsed time with a default msg
+    - verbose_msg (str): Message printed as verbose. It should contain one
+        `{}` to insert the elapsed time.
+    """
+    self.kwargs = kwargs
+    # General starting time
+    self._start_time = None
+    # Select method of choise for the timer
+    if not func_time:
+      self._get_time = select_default_timing_method()
     else:
-      # If python version is 2.#
-      self._int2strl = ['time']
-      self._str2fn = {'time':[time.time,'s']}
+      self._get_time = func_time
+    # Allow to save multiple timers
+    self._timers_start = dict()
+    self.elapsed = dict()
 
-    if type(method) is not int and type(method) is not str:
-      self._get_time = method
+  def start(self,key=None):
+    """
+    - key ()
+    """
+    if not key:
+      self._start_time = self._get_time()
+    else:
+      self._timers_start[key] = self._get_time()
 
-    # Parses from integer to string
-    if type(method) is int and method<len(self._int2strl):
-      method = self._int2strl[method]
-    elif type(method) is int and method>len(self._int2strl):
-      self._warning_value(method)
-      method = 'time'
+  def stop(self,key=None):
+    # Get stopping time
+    _stop_time = self._get_time()
+    
+    # Handle initialization errors first
+    if (not key and not self._start_time or
+      key and not key in self._timers_start.keys()):
+      raise TimerError(f"Timer is not running. Use .start() to start it")
+    
+    # Select correct starting time
+    _start_time = self._start_time
+    if key: _start_time = self._timers_start[key]
+    
+    # Calculate elapsed time
+    _elap_time = _stop_time - _start_time
+    if key: self.elapsed[key] = _elap_time
 
-    # Parses from int to the actual timer
-    if type(method) is str and method in self._str2fn:
-      self._get_time = self._str2fn[method][0]
-      self._measure = self._str2fn[method][1]
-    elif type(method) is str and method not in self._str2fn:
-      self._warning_value(method)
-      self._get_time = self._str2fn['time'][0]
-      self._measure = self._str2fn['time'][1]
+    return _elap_time
 
-
-  def __warning_value(self,item):
-    msg = "Value '{0}' is not a valid option. Using 'time' instead.".format(item)
-    warnings.warn(msg,Warning)
+  def clear_timers(self):
+    """Cleaer all start times if any"""
+    self._timers_start = dict()
+    self.timers_elapsed = dict()
 
   def __enter__(self):
-    if self.nested:
-      self.tstart.append(self._get_time())
-    else:
-      self.tstart = self._get_time()
+    self.elapsed = None
+    self._start_time = self._get_time()
+    return self
 
   def __exit__(self,type,value,traceback):
-    self.tend = self._get_time()
-    if self.nested:
-      self.elapsed = self.tend - self.tstart.pop()
-    else:
-      self.elapsed = self.tend - self.tstart
+    """
+    - verbose (bool): Print elapsed time or not
+    - verbose_msg (str): If present, change the text of the verbose
+    """
+    _stop_time = self._get_time()
+    self.elapsed = _stop_time - self._start_time
     
-    self._print_elapsed()
+    # Check for verbose flag
+    if 'verbose' not in self.kwargs.keys(): verbose = True
+    else: verbose = self.kwargs['verbose']
+    # Check for user verbose text
+    if 'verbose_msg' not in self.kwargs.keys(): verbose_msg = 'Elapsed time: {}'
+    else: verbose_msg = self.kwargs['verbose_msg']
 
-  def _print_elapsed(self):
-    """
-    Prints the elapsed time
-    """
-    if self.name!='': name = '[{}] '.format(self.name)
-    else: name = self.name
-    print('{0}Elapsed time: {1} ({2})'.format(name,self.elapsed,self._measure))
-
-  def tic(self):
-    """
-    Defines the start of the timing.
-    """
-    if self.nested:
-      self.tstart.append(self._get_time())
-    else:
-      self.tstart = self._get_time()
-
-  def toc(self,print_elapsed=None):
-    """
-    Defines the end of the timing.
-    """
-    self.tend = self._get_time()
-    if self.nested:
-      if len(self.tstart)>0:
-        self.elapsed = self.tend - self.tstart.pop() 
-      else:
-        self.elapsed = None
-    else:
-      if self.tstart:
-        self.elapsed = self.tend - self.tstart
-      else:
-        self.elapsed = None
-
-    if print_elapsed is None:
-      if self._print_toc:
-        self._print_elapsed()
-    else:
-      if print_elapsed:
-        self._print_elapsed()
-
-    return(self.elapsed)
-
-  def set_print_toc(self,set_print):
-    """
-    Indicate if you want the timed time printed out or not.
-    Args:
-      set_print (bool): If True, a message with the elapsed time will be printed.
-    """
-    if type(set_print) is bool:
-      self._print_toc = set_print
-    else:
-      warnings.warn("Parameter 'set_print' not boolean. Ignoring the command.",Warning)
-
-  def set_nested(self,nested):
-    """
-    Sets the nested functionality.
-    """
-    # Assert that the input is a boolean
-    if type(nested) is bool:
-      # Check if the request is actually changing the 
-      # behaviour of the nested tictoc
-      if nested!= self.nested:
-        self.nested = nested
-
-        if self.nested:
-          self.tstart = []
-        else:
-          self.tstart = None
-    else:
-      warnings.warn("Parameter 'nested' not boolean. Ignoring the command.",Warning)
+    if verbose:
+      print(verbose_msg.format(self.elapsed))
 
 
-class TicToc2(TicToc):
-  def tic(self,nested=None):
-    """
-    Defines the start of the timing.
-    """
-    if nested:
-      self.set_nested(True)
 
-    if self.nested:
-      self.tstart.append(self._get_time())
-    else:
-      self.tstart = self._get_time()
+# For tic toc
+__TICTOC_HELPER_CLASS_asdfgqwerzxcv1234 = Timer()
+tic = __TICTOC_HELPER_CLASS_asdfgqwerzxcv1234.start
+toc = __TICTOC_HELPER_CLASS_asdfgqwerzxcv1234.stop
 
-__TICTOC_asdfghh123456789 = TicToc2()
-tic = __TICTOC_asdfghh123456789.tic
-toc = __TICTOC_asdfghh123456789.toc
+
+if __name__=='__main__':    # Get stopping time
+  import time
+  t = Timer()
+  # Test Raise TimeError if stoped without start
+  # Test Raise TimeError if double start
+  # Test returned value of stop
+
+  print('Starting...')
+  t.start()
+  t.start('1')
+  time.sleep(1)
+  t.start()
+  time.sleep(1)
+  print('Stopping...')
+  elapsed = t.stop()
+  elapsed1 = t.stop('1')
+  print('Elapsed: ',elapsed)
+  print('Elapsed1: ',elapsed1, type(elapsed1))
+  print(t.elapsed)
+  
+  print('Using Context Manager 1')
+  with Timer() as T:
+    time.sleep(1)
+  print('Using Context Manager 2')
+  with Timer(verbose=False) as T:
+    time.sleep(1)
+  print('Elapsed time:',T.elapsed)
+  print('Using Context Manager 3')
+  with Timer(verbose_msg=f'[User msg][{time.time()}] Elapsed time: {{}}') as T:
+    time.sleep(1)
+
+  print('Using Tic Toc')
+  tic()
+  time.sleep(2)
+  elapsed = toc()
+  print('Elapsed time:',elapsed)

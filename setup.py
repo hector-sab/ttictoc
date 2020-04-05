@@ -3,9 +3,17 @@ import setuptools
 with open('README.md','r') as f:
     long_description = f.read()
 
+def __get_version():
+  import json
+  with open('ttictoc/version.json') as f:
+    version = json.load(f)['version']
+  return version
+
+version = __get_version()
+
 setuptools.setup(
     name='ttictoc',
-    version='0.4.1',
+    version=version,
     author='Hector Sanchez',
     author_email='hector.direct@gmail.com',
     license='MIT',
