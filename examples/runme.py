@@ -1,6 +1,7 @@
 import time
-from ttictoc import tic,toc,Timer
-
+from ttictoc import Timer
+from ttictoc import tic,toc # Matlab-like tic toc
+from ttictoc import tic2,toc2 # Non matlab-like tic toc
 print('>>> Tic Toc')
 print('\nSimple Tic Toc')
 tic()
@@ -41,8 +42,26 @@ print('[OUT LOOP] Elapsed time:',t.stop())
 
 
 
+print('>>> Tic Toc, v2 (non matlab-like)')
+print('\nSimple Tic Toc')
+tic2()
+time.sleep(1)
+elapsed = toc2()
+print('Elapsed time:',elapsed)
 
-print('\n>>>Using Timer class, v2')
+print('\nNested Tic Toc')
+tic2()
+for i in range(2):
+  tic2()
+  time.sleep(1)
+  elapsed = toc2()
+  print('[IN LOOP] Elapsed time:',elapsed)
+print('[OUT LOOP] Elapsed time:',toc2())
+
+
+
+
+print('\n>>>Using Timer class, v2 (non matlab-like)')
 print('\nSimple')
 t = Timer(matlab_like=False)
 t.start()
@@ -66,6 +85,10 @@ print('\n[OUT LOOP][Init] Elapsed time:',t.stop('Init'))
 print('[OUT LOOP][0] Elapsed time:',t.stop(0))
 print('[OUT LOOP][1] Elapsed time:',t.stop(1))
 t.clear_timers() # Delete all the timers, only works in not matlab-like mode
+
+
+
+
 
 
 print('\n>>>Context Manager')

@@ -3,13 +3,13 @@ import setuptools
 with open('README.md','r') as f:
     long_description = f.read()
 
-def __get_version():
-  import json
-  with open('ttictoc/version.json') as f:
-    version = json.load(f)['version']
-  return version
+#def __get_version():
+#  import json
+#  with open('ttictoc/version.json') as f:
+#    version = json.load(f)['version']
+#  return version
 
-version = __get_version()
+version = '0.5.4'#__get_version()
 
 setuptools.setup(
     name='ttictoc',

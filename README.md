@@ -74,7 +74,15 @@ with Timer(verbose_msg=f'[User msg][{time.time()}] Elapsed time: {{}}'):
 You can deactivate the matlab-like nesting. In this case calling start will update the global starting time for toc. However, you can have nested tics by giving a `key` to start and stop.
 ```python
 import time
-from ttictoc import Timer
+from ttictoc import Timer,tic2,toc2
+
+tic()
+for i in range(2):
+  tic()
+  time.sleep(1)
+  elapsed = toc()
+  print('[IN LOOP] Elapsed time:',elapsed)
+print('[OUT LOOP] Elapsed time:',toc())
 
 t = Timer(matlab_like=False)
 t.start()

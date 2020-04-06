@@ -197,6 +197,9 @@ __TICTOC_HELPER_CLASS_asdfgqwerzxcv1234 = Timer(matlab_like=True)
 tic = __TICTOC_HELPER_CLASS_asdfgqwerzxcv1234.start
 toc = __TICTOC_HELPER_CLASS_asdfgqwerzxcv1234.stop
 
+__TICTOC_HELPER_CLASS_rewqfdsavcxz4321 = Timer(matlab_like=False)
+tic2 = __TICTOC_HELPER_CLASS_rewqfdsavcxz4321.start
+toc2 = __TICTOC_HELPER_CLASS_rewqfdsavcxz4321.stop
 
 if __name__=='__main__':    # Get stopping time
   import time

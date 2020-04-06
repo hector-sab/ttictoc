@@ -111,3 +111,6 @@ venv.bak/
 
 # Python egg metadata, regenerated from source files by setuptools.
 /*.egg-info
+
+# Others
+*.swp
