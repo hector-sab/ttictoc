@@ -1,6 +1,16 @@
 # ttictoc
 Time execution of blocks of code.
 
+## How to install
+From pip
+```
+pip install ttictoc
+```
+or download this repo and do
+```
+pip install .
+```
+
 ## TicToc
 The easiest way to time something is with `tic` and `toc`
 
