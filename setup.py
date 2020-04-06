@@ -9,7 +9,7 @@ with open('README.md','r') as f:
 #    version = json.load(f)['version']
 #  return version
 
-version = '0.5.4'#__get_version()
+version = '0.5.5'#__get_version()
 
 setuptools.setup(
     name='ttictoc',

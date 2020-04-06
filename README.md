@@ -76,13 +76,13 @@ You can deactivate the matlab-like nesting. In this case calling start will upda
 import time
 from ttictoc import Timer,tic2,toc2
 
-tic()
+tic2()
 for i in range(2):
-  tic()
+  tic2()
   time.sleep(1)
-  elapsed = toc()
+  elapsed = toc2()
   print('[IN LOOP] Elapsed time:',elapsed)
-print('[OUT LOOP] Elapsed time:',toc())
+print('[OUT LOOP] Elapsed time:',toc2())
 
 t = Timer(matlab_like=False)
 t.start()
