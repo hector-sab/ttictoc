@@ -1,7 +1,7 @@
 # ttictoc
 Time execution of blocks of code.
 
-## TocToc
+## TicToc
 The easiest way to time something is with `tic` and `toc`
 
 ```python
