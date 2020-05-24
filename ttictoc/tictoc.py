@@ -193,13 +193,13 @@ class Timer:
 
 
 # For tic toc
-__TICTOC_HELPER_CLASS_asdfgqwerzxcv1234 = Timer(matlab_like=True)
-tic = __TICTOC_HELPER_CLASS_asdfgqwerzxcv1234.start
-toc = __TICTOC_HELPER_CLASS_asdfgqwerzxcv1234.stop
+__TICTOC_HELPER_CLASS_5da0381c_27af_4d67_8881_30eba81302d7 = Timer(matlab_like=True)
+tic = __TICTOC_HELPER_CLASS_5da0381c_27af_4d67_8881_30eba81302d7.start
+toc = __TICTOC_HELPER_CLASS_5da0381c_27af_4d67_8881_30eba81302d7.stop
 
-__TICTOC_HELPER_CLASS_rewqfdsavcxz4321 = Timer(matlab_like=False)
-tic2 = __TICTOC_HELPER_CLASS_rewqfdsavcxz4321.start
-toc2 = __TICTOC_HELPER_CLASS_rewqfdsavcxz4321.stop
+__TICTOC_HELPER_CLASS_b178dbeb-a38c-4c13-8b0d-df2972a003db = Timer(matlab_like=False)
+tic2 = __TICTOC_HELPER_CLASS_b178dbeb-a38c-4c13-8b0d-df2972a003db.start
+toc2 = __TICTOC_HELPER_CLASS_b178dbeb-a38c-4c13-8b0d-df2972a003db.stop
 
 if __name__=='__main__':    # Get stopping time
   import time
