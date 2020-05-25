@@ -1,6 +1,9 @@
 # ttictoc
 Time execution of blocks of code.
 
+##
+Tested against python 3.6, python 3.7, and 3.8
+
 ## How to install
 From pip
 ```
