@@ -131,7 +131,7 @@ class Timer:
     if self.matlab_like:
       self._timers_start.append(self._get_time())
     else:
-      if not key:
+      if key is None:
         self._start_time = self._get_time()
       else:
         self._timers_start[key] = self._get_time()
@@ -142,22 +142,25 @@ class Timer:
     
     if self.matlab_like:
       if len(self._timers_start)==0:
-        _elap_time = None
+        #_elap_time = None
+        raise TimerError("Timer is not initialzed. Use start() first")
       else:
         _elap_time = _stop_time - self._timers_start.pop()
     else:
       # Handle initialization errors first
-      if (not key and not self._start_time or
-        key and not key in self._timers_start.keys()):
-        raise TimerError(f"Timer is not running. Use .start() to start it")
+      if key is None and self._start_time is None:
+        raise TimerError("Timer is not initialzed. Use start() first")
+      elif key is not None and key not in self._timers_start.keys():
+        raise TimerError(f"Timer for {key} is not running. "
+              "Use start(key=<DESIRED_KEY_NAME>)")
       
       # Select correct starting time
       _start_time = self._start_time
-      if key: _start_time = self._timers_start[key]
+      if key is not None: _start_time = self._timers_start[key]
       
       # Calculate elapsed time
       _elap_time = _stop_time - _start_time
-      if key: self.elapsed[key] = _elap_time
+      if key is not None: self.elapsed[key] = _elap_time
 
     return _elap_time
 
@@ -193,13 +196,13 @@ class Timer:
 
 
 # For tic toc
-__TICTOC_HELPER_CLASS_5da0381c_27af_4d67_8881_30eba81302d7 = Timer(matlab_like=True)
-tic = __TICTOC_HELPER_CLASS_5da0381c_27af_4d67_8881_30eba81302d7.start
-toc = __TICTOC_HELPER_CLASS_5da0381c_27af_4d67_8881_30eba81302d7.stop
+_TICTOC_HELPER_CLASS_5da0381c_27af_4d67_8881 = Timer(matlab_like=True)
+tic = _TICTOC_HELPER_CLASS_5da0381c_27af_4d67_8881.start
+toc = _TICTOC_HELPER_CLASS_5da0381c_27af_4d67_8881.stop
 
-__TICTOC_HELPER_CLASS_b178dbeb_a38c_4c13_8b0d_df2972a003db = Timer(matlab_like=False)
-tic2 = __TICTOC_HELPER_CLASS_b178dbeb_a38c_4c13_8b0d_df2972a003db.start
-toc2 = __TICTOC_HELPER_CLASS_b178dbeb_a38c_4c13_8b0d_df2972a003db.stop
+_TICTOC_HELPER_CLASS_b178dbeb_a38c_4c13_8b0d = Timer(matlab_like=False)
+tic2 = _TICTOC_HELPER_CLASS_b178dbeb_a38c_4c13_8b0d.start
+toc2 = _TICTOC_HELPER_CLASS_b178dbeb_a38c_4c13_8b0d.stop
 
 if __name__=='__main__':    # Get stopping time
   import time
