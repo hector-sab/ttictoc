@@ -59,7 +59,8 @@ class TestMatlabLike:
         diff = abs(delta_gt - delta)
 
         assert diff < 0.01, (
-            f"Diff is too big. Expected diff: 0.01" ", obtained diff {diff}"
+            "Diff is too big. Expected diff: 0.01"
+            ", obtained diff {}".format(diff)
         )
 
 
@@ -72,7 +73,8 @@ class TestNonMatlabLike:
         elapsed = toc2()
         diff = abs(delta_gt - elapsed)
         assert diff < 0.01, (
-            f"Diff is too big. Expected diff: 0.01" ", obtained diff {diff}"
+            "Diff is too big. Expected diff: 0.01"
+            ", obtained diff {}".format(diff)
         )
 
     def test_restart_type(self):
@@ -84,7 +86,7 @@ class TestNonMatlabLike:
         _start_time = _TICTOC_HELPER_CLASS_b178dbeb_a38c_4c13_8b0d._start_time
         assert isinstance(_start_time, float), (
             "Invalid starting time variable type."
-            f"Expected type: float, obtained type: {_start_time}"
+            "Expected type: float, obtained type: {}".format(_start_time)
         )
 
     def test_restart(self):
@@ -102,7 +104,8 @@ class TestNonMatlabLike:
         diff = abs(elapsed - delta_gt)
 
         assert diff < 0.01, (
-            "Diff is too big. Expected diff: 0.01" f", obtained diff {diff}"
+            "Diff is too big. Expected diff: 0.01"
+            ", obtained diff {}".format(diff)
         )
 
     def test_buffer_values(self):
@@ -133,8 +136,8 @@ class TestNonMatlabLike:
 
         assert diff1 < 0.01 and diff2 < 0.01, (
             "Diff is too big. "
-            f"Expected diff1: 0.01, obtained diff1 {diff1}. "
-            f"Expected diff2: 0.01, obtained diff2 {diff2}."
+            "Expected diff1: 0.01, obtained diff1 {}. ".format(diff2) +
+            "Expected diff2: 0.01, obtained diff2 {}.".format(diff2)
         )
 
 
