@@ -34,7 +34,7 @@ jobs:
     
     - name: "Install dependencies"
       run: |
-        apt instal -y install gcc
+        apt install -y gcc
         python -m pip install --upgrade pip
         pip install -r requirements-dev.txt
 
