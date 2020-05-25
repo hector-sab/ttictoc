@@ -136,8 +136,8 @@ class TestNonMatlabLike:
 
         assert diff1 < 0.01 and diff2 < 0.01, (
             "Diff is too big. "
-            "Expected diff1: 0.01, obtained diff1 {}. ".format(diff2) +
-            "Expected diff2: 0.01, obtained diff2 {}.".format(diff2)
+            "Expected diff1: 0.01, obtained diff1 {}. ".format(diff2)
+            + "Expected diff2: 0.01, obtained diff2 {}.".format(diff2)
         )
 
 
