@@ -58,7 +58,7 @@ print('[OUTSIDE LOOP][{}] Elapsed time: {}'.format('t2',t.elapsed['t2']))
 ```
 
 ## Context manager
-You can also use it as context manager
+You can also use it as context manager:
 ```
 import time
 from ttictoc import Timer
