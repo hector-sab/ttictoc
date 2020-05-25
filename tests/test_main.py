@@ -135,9 +135,7 @@ class TestNonMatlabLike:
         diff2 = abs(delta_gt * (num_iters + 1) - delta)
 
         assert diff1 < 0.01 and diff2 < 0.01, (
-            "Diff is too big. "
-            "Expected diff1: 0.01, obtained diff1 {}. ".format(diff2)
-            + "Expected diff2: 0.01, obtained diff2 {}.".format(diff2)
+            "Diff is too big. Diffs of {} and {}".format(diff1, diff2)
         )
 
 
