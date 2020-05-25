@@ -93,6 +93,7 @@ class TestNonMatlabLike:
         """Test number of elements in the buffer"""
         num_iters = 10
         delta_gt = 0.5
+
         for _ in range(num_iters):
             tic2()
             time.sleep(delta_gt - 0.2)
